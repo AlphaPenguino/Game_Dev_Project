@@ -8,16 +8,27 @@ public class PlayerMotor : MonoBehaviour
     private CharacterController controller;
     private Vector3 playerVelocity;
     
-    private float speed = 5f;
+    
     private bool isGrounded;
     private bool sprinting;
-    private bool crouching;
     private bool lerpcrouch;
+    private float speed;
+    private bool crouching;
+    private bool prone;
+
     public float gravity = -9.8f;
     public float jumpHeight = 3f;
 
     
-    private float fovSmoothSpeed = 5f;
+    private float walkSpeed = 4f;
+    private float sprintSpeed = 7f;
+    private float crouchSpeed = 2.5f;
+    private float proneSpeed = 1.3f;
+
+    private float normalHeight = 2f;
+    private float crouchHeight = 1.2f;
+    private float proneHeight = 0.5f;
+
 
 
     // Start is called before the first frame update
@@ -50,23 +61,55 @@ public class PlayerMotor : MonoBehaviour
     }
     public void Jump()
     {
-        if(isGrounded)
+        
+        if(isGrounded && !prone)
         {
             playerVelocity.y = Mathf.Sqrt(jumpHeight * -3.0f * gravity);
         }
-    }
-    public void SetSprinting(bool isSprinting)
-    {
-        if (isGrounded)
+        else if (prone)
         {
-            sprinting = isSprinting;
-            speed = sprinting ? 8f : 5f;
+            prone = true;
         }
         
     }
-    public void SetCrouching(bool isCrouching)
+    public void SetSprinting(bool isSprinting)
+    {
+        if (isGrounded && !prone && !crouching)
+        {
+            sprinting = isSprinting;
+            speed = sprinting ? sprintSpeed : walkSpeed;
+        }
+        
+    }
+    public void ToggleCrouch()
+    {
+        if (isGrounded)
+        {
+            crouching = !crouching;
+            speed = crouching ? crouchSpeed : walkSpeed;
+            controller.height = crouching ? crouchHeight : normalHeight;
+        }
+    }
+
+    public void ToggleProne()
     {
         
+            if (prone)
+            {
+                // If prone, stand up fully
+                prone = false;
+                crouching = false;
+                speed = walkSpeed;
+                controller.height = normalHeight;
+            }
+            else
+            {
+                // If standing or crouching, go prone
+                prone = true;
+                crouching = false;
+                speed = proneSpeed;
+                controller.height = proneHeight;
+            }
         
     }
 }

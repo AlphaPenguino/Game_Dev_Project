@@ -22,6 +22,8 @@ public class InputManager : MonoBehaviour
         onFoot.Jump.performed += ctx => motor.Jump();
         onFoot.Sprint.started += ctx => motor.SetSprinting(true);
         onFoot.Sprint.canceled += ctx => motor.SetSprinting(false);
+        onFoot.Crouch.performed += ctx => motor.ToggleCrouch();
+        onFoot.Prone.performed += ctx => motor.ToggleProne();
     }
 
     // Update is called once per frame
