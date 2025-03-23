@@ -17,7 +17,7 @@ public class PlayerMotor : MonoBehaviour
     private bool prone;
 
     public float gravity = -9.8f;
-    public float jumpHeight = 3f;
+    public float jumpHeight = 0.8f;
 
     
     private float walkSpeed = 4f;
